@@ -1,0 +1,86 @@
+<div class="navbar px-4 border-b-2">
+  <div class="flex-1">
+    <a
+      class="flex justify-start text-xl w-32 cursor-pointer"
+      (click)="goToHome()"
+      ><img
+        class="object-cover"
+        src="img/KostomApiLogoBlack-BW.png"
+        alt="KostomAp"
+    /></a>
+  </div>
+
+  <div class="dropdown dropdown-end">
+    <div
+      tabindex="0"
+      role="button"
+      class="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-accent md:me-0"
+    >
+      <span class="sr-only">Open user menu</span>
+      <img
+        class="w-8 h-8 me-2 rounded-full"
+        src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+        alt="user photo"
+      />
+      Bonnie Green
+      <svg
+        class="w-2.5 h-2.5 ms-3"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 10 6"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 4 4 4-4"
+        />
+      </svg>
+    </div>
+
+    <div
+      tabindex="0"
+      class="menu menu-sm dropdown-content divide-y bg-gray-100 rounded-box z-[10] mt-3 w-44 p-2 shadow"
+    >
+      <div class="px-4 py-3 text-sm text-gray-900">
+        <div class="font-medium">Pro User</div>
+        <div class="truncate">name_flowbite.com</div>
+      </div>
+      <ul
+        class="py-2 text-sm text-gray-7000"
+        aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton"
+      >
+        <li>
+          <a
+            href="#"
+            class="block px-4 py-2 hover:bg-accent text-gray-900 :hover:text-white"
+            >Dashboard</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="block px-4 py-2 hover:bg-accent text-gray-900 hover:text-white"
+            >Settings</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="block px-4 py-2 hover:bg-accent text-gray-900 hover:text-white"
+            >Earnings</a
+          >
+        </li>
+      </ul>
+      <div class="py-2 text-gray-900">
+        <a
+          href="#"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 rounded-md hover:text-gray-100"
+          >Sign out</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,72 @@
-/* You can add global styles to this file, and also import other style files */
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .section-portrait {
+    @apply w-full mt-2 mb-10 [&>*]:w-full;
+  }
+
+  .section-grid-portrait {
+    @apply grid gap-5 sm:grid-rows-2 justify-center;
+  }
+
+  .section {
+    @apply w-full max-w-5xl mt-2 mb-10;
+  }
+
+  .section-grid {
+    @apply grid gap-5 grid-rows-2 grid-cols-1 sm:grid-rows-1 sm:grid-cols-2 items-center;
+  }
+
+  .section-border {
+    @apply border-b-8 border-primary;
+  }
+
+  .section-image {
+    @apply self-center;
+  }
+
+  .section-h3 {
+    @apply text-xl text-center sm:text-left self-center font-bold;
+  }
+
+  .section-h3-reverse {
+    @apply text-xl text-center sm:text-right self-center font-bold;
+  }
+
+  .section-p {
+    @apply text-sm text-center sm:text-left;
+  }
+
+  .section-p-reverse {
+    @apply text-sm text-center sm:text-right;
+  }
+
+  .home-section {
+    @apply w-full max-w-3xl rounded-3xl overflow-hidden;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-red-600 via-purple-500 to-indigo-400 inline-block text-transparent bg-clip-text;
+  }
+
+  .doc-header {
+    @apply font-bold text-2xl text-gradient text-center;
+  }
+
+  .doc-section {
+    @apply pb-10 mb-7 border-b-4;
+  }
+}
