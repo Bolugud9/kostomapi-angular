@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InputOutputComponent } from '../input-output/input-output.component';
-import { Mql4Mql5Service } from './mql4-mql5.service';
 import { Meta, Title } from '@angular/platform-browser';
+import { AuthService } from '../shared/auth.service';
 
 @Component({
   selector: 'mql4-mql5',
@@ -21,9 +21,9 @@ export class Mql4Mql5Component implements OnInit {
   title: string = 'MQL4 TO MQL5 CONVERTER';
 
   constructor(
-    private mql45: Mql4Mql5Service,
     private _title: Title,
-    private meta: Meta
+    private meta: Meta,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +40,7 @@ export class Mql4Mql5Component implements OnInit {
   }
 
   ParseMQL4(value: string) {
-    this.mql45.ParseMQL4(value).subscribe((val: string[]) => {
+    this.auth.ParseMQL4(value).subscribe((val: string[]) => {
       this._outputValue = this.Format(val);
     });
   }

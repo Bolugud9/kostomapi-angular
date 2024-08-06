@@ -39,10 +39,10 @@
         </form>
       </div>
       <div
-        class="h-full relative overflow-scroll hover:[&>button]:bg-[rgba(0,0,0,.2)] rounded-xl transition-all"
+        class="h-full relative hover:[&>button]:bg-[rgba(0,0,0,.2)] rounded-xl transition-all"
       >
         <pre
-          class="py-4 px-3 self-start text-sm h-full w-full text-start flex flex-col"
+          class="overflow-scroll py-4 px-3 self-start text-sm h-full w-full text-start flex flex-col"
         >
           <code *ngIf="outputValue.length > 0" class="flex flex-col gap-1">
             <span *ngFor="let item of outputValue">{{ item }}</span>

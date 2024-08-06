@@ -28,7 +28,7 @@ export function app(): express.Express {
     })
   );
 
-  // server.get('/api/test', async (req, res) => {
+  // server.post('/api/test', async (req, res) => {
   //   console.log('Here');
   //   res.status(200).send('Hey');
   // });

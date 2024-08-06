@@ -22,7 +22,9 @@
         src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
         alt="user photo"
       />
-      Bonnie Green
+
+      {{ user?.username }}
+
       <svg
         class="w-2.5 h-2.5 ms-3"
         aria-hidden="true"
@@ -44,9 +46,25 @@
       tabindex="0"
       class="menu menu-sm dropdown-content divide-y bg-gray-100 rounded-box z-[10] mt-3 w-44 p-2 shadow"
     >
-      <div class="px-4 py-3 text-sm text-gray-900">
-        <div class="font-medium">Pro User</div>
-        <div class="truncate">name_flowbite.com</div>
+      <div
+        *ngIf="user != null && !user.isAnonymous"
+        class="px-4 py-3 text-sm text-gray-900"
+      >
+        <div *ngIf="!user.freeUser" class="font-medium">Pro User</div>
+        <div *ngIf="user.freeUser" class="font-medium">Free User</div>
+
+        <p class="truncate text-[10px] w-32">{{ user.email }}</p>
+      </div>
+      <div
+        *ngIf="user == null || user.isAnonymous"
+        class="px-4 py-3 text-sm text-gray-900"
+      >
+        <button
+          (click)="signInWithGoogle()"
+          class="btn btn-outline btn-primary truncate w-full text-start"
+        >
+          Sign In/Sign Up
+        </button>
       </div>
       <ul
         class="py-2 text-sm text-gray-7000"
@@ -55,7 +73,7 @@
         <li>
           <a
             href="#"
-            class="block px-4 py-2 hover:bg-accent text-gray-900 :hover:text-white"
+            class="block px-4 py-2 hover:bg-accent text-gray-900 hover:text-white"
             >Dashboard</a
           >
         </li>
@@ -74,12 +92,13 @@
           >
         </li>
       </ul>
-      <div class="py-2 text-gray-900">
-        <a
-          href="#"
-          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 rounded-md hover:text-gray-100"
-          >Sign out</a
+      <div *ngIf="user != null && !user.isAnonymous" class="py-2 text-gray-900">
+        <button
+          (click)="signOut()"
+          class="block px-4 w-full py-2 text-start text-sm text-gray-700 hover:bg-gray-400 rounded-md hover:text-gray-100"
         >
+          Sign out
+        </button>
       </div>
     </div>
   </div>

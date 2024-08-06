@@ -44,3 +44,7 @@ Thumbs.db
 
 #backend script
 shared
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json
