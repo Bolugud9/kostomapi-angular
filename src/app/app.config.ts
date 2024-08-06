@@ -16,11 +16,11 @@ export const appConfig: ApplicationConfig = {
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'kostomapi',
-        appId: '1:993246645521:web:6b6dc2cda7bfc3fb55d0b0',
-        storageBucket: 'kostomapi.appspot.com',
-        apiKey: 'AIzaSyBn0Rv5V-PqF6zAvV3jb6hLhhUiyNvoDn8',
-        authDomain: 'kostomapi.firebaseapp.com',
-        messagingSenderId: '993246645521',
+        appId: '/*secret*/',
+        storageBucket: '/*secret*/',
+        apiKey: '/*secret*/',
+        authDomain: '/*secret*/',
+        messagingSenderId: '/*secret*/',
       })
     ),
     provideAuth(() => getAuth()),
