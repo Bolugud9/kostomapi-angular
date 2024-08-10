@@ -2,16 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { InputOutputComponent } from '../input-output/input-output.component';
 import { Meta, Title } from '@angular/platform-browser';
 import { AuthService } from '../shared/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'mql4-mql5',
   standalone: true,
-  imports: [InputOutputComponent],
+  imports: [InputOutputComponent, HeaderComponent],
   templateUrl: './mql4-mql5.component.html',
   styleUrl: './mql4-mql5.component.css',
 })
 export class Mql4Mql5Component implements OnInit {
   _outputValue: string[] = [];
+  showLoadingAnimation: boolean = false;
+  showSignInPopup: boolean = false;
+
   get outputValue(): string[] {
     return this._outputValue;
   }
@@ -23,7 +28,8 @@ export class Mql4Mql5Component implements OnInit {
   constructor(
     private _title: Title,
     private meta: Meta,
-    private auth: AuthService
+    private auth: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -36,13 +42,32 @@ export class Mql4Mql5Component implements OnInit {
       { name: 'og:locale', content: 'en_US' },
       { name: 'og:site_name', content: 'KostomApi' },
       { name: 'og:image', content: '/img/KostomApiLogoBlack-BW.png' },
+      {
+        name: 'robots',
+        content:
+          'index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large',
+      },
     ]);
   }
 
   ParseMQL4(value: string) {
-    this.auth.ParseMQL4(value).subscribe((val: string[]) => {
-      this._outputValue = this.Format(val);
-    });
+    this.showLoadingAnimation = true;
+    this.auth.ParseMQL4(value).subscribe(
+      (val: string[]) => {
+        this.showLoadingAnimation = false;
+        this._outputValue = this.Format(val);
+      },
+      (error) => {
+        this.showLoadingAnimation = false;
+        if (error.error == 'login required') {
+          this.showSignInPopup = true;
+          // return;
+        }
+        this.toastr.error(error.error, 'Error', {
+          toastClass: 'text-white rounded-lg hover:shadow-none px-5 py-2 my-1',
+        });
+      }
+    );
   }
 
   private Format(outputValue: string[]): string[] {

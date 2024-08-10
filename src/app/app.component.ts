@@ -4,7 +4,6 @@ import { InputOutputComponent } from './input-output/input-output.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthService } from './shared/auth.service';
 import { User } from '@angular/fire/auth';
-import { provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +23,7 @@ export class AppComponent implements OnInit {
           email: user.email!,
           freeUser: true,
           isAnonymous: false,
+          emailVerified: user.emailVerified,
         });
         this.auth.uid = user.uid;
         this.auth.serverRegisterUser(1, user.uid);
@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
           email: '',
           freeUser: true,
           isAnonymous: true,
+          emailVerified: false,
         });
         this.auth.uid = user.uid;
         this.auth.serverRegisterUser(0, user.uid);

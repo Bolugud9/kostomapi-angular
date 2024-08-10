@@ -4,11 +4,18 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InvalidInputEntries } from './InvalidInputEntries';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../shared/auth.service';
+import { LoadingAnimationComponent } from '../loading-animation/loading-animation.component';
 
 @Component({
   selector: 'input-output',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    LoadingAnimationComponent,
+  ],
   templateUrl: './input-output.component.html',
   styleUrl: './input-output.component.css',
 })
@@ -16,10 +23,26 @@ export class InputOutputComponent implements OnInit {
   @Output() inputValue = new EventEmitter<any>();
   @Input() outputValue: string[] = [];
   @Input() title: string = '';
+  @Input() showLoadingAnimation: boolean = false;
 
-  constructor(private clipboard: Clipboard) {}
+  constructor(private clipboard: Clipboard, private auth: AuthService) {}
 
   ngOnInit(): void {}
+
+  get getEmailVerified(): boolean {
+    if (
+      this.auth.currentUser() == null ||
+      this.auth.currentUser() == undefined ||
+      this.auth.currentUser()?.isAnonymous
+    )
+      return true;
+    return this.auth.currentUser()?.emailVerified!;
+  }
+
+  _verificationMessage: string = 'click here to verify your email';
+  get verificationMessage(): string {
+    return this._verificationMessage;
+  }
 
   inputControl = new FormControl('', [
     Validators.required,
@@ -53,5 +76,11 @@ export class InputOutputComponent implements OnInit {
     };
 
     attemptToCopy();
+  }
+
+  sendVerificationEmail() {
+    this.auth.sendVerificationEmail()?.subscribe(() => {
+      this._verificationMessage = 'sent to your email';
+    });
   }
 }

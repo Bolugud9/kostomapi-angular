@@ -1,7 +1,13 @@
+<app-header
+  [toggleSigninClicked]="showSignInPopup"
+  (signInClosed)="showSignInPopup = $event"
+></app-header>
+
 <input-output
   (inputValue)="ParseMQL4($event)"
   [outputValue]="outputValue"
   [title]="title"
+  [showLoadingAnimation]="showLoadingAnimation"
 ></input-output>
 
 <main class="flex flex-col items-center mb-7">

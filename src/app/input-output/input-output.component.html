@@ -5,7 +5,7 @@
       class="section section-grid shadow-2xl p-5 overflow-clip border-4 rounded-3xl h-[1000px] sm:h-[500px] max-h-[1000px] sm:max-h-[500px]"
     >
       <div class="border-b-2 sm:border-r-2 sm:border-b-0 h-full">
-        <form class="p-3 h-full flex flex-col">
+        <form class="p-3 h-full flex flex-col relative">
           <textarea
             class="textarea border-2 resize-none shrink-0 grow w-full"
             placeholder="paste your code here..."
@@ -14,9 +14,10 @@
           <div
             *ngIf="
               inputControl?.invalid &&
-              (inputControl?.dirty || inputControl?.touched)
+              (inputControl?.dirty || inputControl?.touched) &&
+              getEmailVerified
             "
-            class="text-red-600 font-bold"
+            class="text-red-500 font-bold"
           >
             <small *ngIf="inputControl?.hasError('required')">
               This field is required.
@@ -26,9 +27,21 @@
               This field required a text value.
             </small>
           </div>
+          <loading-animation
+            class="absolute bottom-0"
+            [showAnimation]="showLoadingAnimation"
+          ></loading-animation>
+
+          <button
+            *ngIf="!getEmailVerified"
+            class="text-red-500 font-bold text-left text-sm"
+            (click)="$event.preventDefault(); sendVerificationEmail()"
+          >
+            {{ verificationMessage }}
+          </button>
           <div class="flex flex-col items-end pt-3">
             <button
-              [disabled]="inputControl.invalid"
+              [disabled]="inputControl.invalid || !getEmailVerified"
               class="btn"
               type="submit"
               (click)="$event.preventDefault(); submitForm()"

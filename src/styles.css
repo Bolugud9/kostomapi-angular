@@ -1,4 +1,5 @@
 @import "https://fonts.googleapis.com/icon?family=Material+Icons";
+@import "ngx-toastr/toastr";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,5 +69,9 @@
 
   .doc-section {
     @apply pb-10 mb-7 border-b-4;
+  }
+
+  .home-doc-header {
+    @apply font-bold text-5xl text-gradient text-center;
   }
 }

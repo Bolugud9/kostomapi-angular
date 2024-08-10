@@ -1,12 +1,10 @@
 <div class="navbar px-4 border-b-2">
   <div class="flex-1">
-    <a
-      class="flex justify-start text-xl w-32 cursor-pointer"
-      (click)="goToHome()"
+    <a class="flex justify-start text-xl w-32 cursor-pointer" href="/"
       ><img
         class="object-cover"
         src="img/KostomApiLogoBlack-BW.png"
-        alt="KostomAp"
+        alt="KostomApi"
     /></a>
   </div>
 
@@ -17,11 +15,7 @@
       class="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-accent md:me-0"
     >
       <span class="sr-only">Open user menu</span>
-      <img
-        class="w-8 h-8 me-2 rounded-full"
-        src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-        alt="user photo"
-      />
+      <mat-icon class="mr-1" fontIcon="account_circle"></mat-icon>
 
       {{ user?.username }}
 
@@ -44,14 +38,14 @@
 
     <div
       tabindex="0"
-      class="menu menu-sm dropdown-content divide-y bg-gray-100 rounded-box z-[10] mt-3 w-44 p-2 shadow"
+      class="menu menu-sm dropdown-content divide-y bg-gray-100 rounded-sm z-[10] mt-3 w-52 p-2 shadow"
     >
       <div
         *ngIf="user != null && !user.isAnonymous"
         class="px-4 py-3 text-sm text-gray-900"
       >
-        <div *ngIf="!user.freeUser" class="font-medium">Pro User</div>
-        <div *ngIf="user.freeUser" class="font-medium">Free User</div>
+        <div *ngIf="!user.freeUser" class="font-medium">Pro</div>
+        <div *ngIf="user.freeUser" class="font-medium">Free</div>
 
         <p class="truncate text-[10px] w-32">{{ user.email }}</p>
       </div>
@@ -60,38 +54,52 @@
         class="px-4 py-3 text-sm text-gray-900"
       >
         <button
-          (click)="signInWithGoogle()"
-          class="btn btn-outline btn-primary truncate w-full text-start"
+          (click)="signIn()"
+          class="btn btn-outline btn-accent truncate w-full text-start"
         >
           Sign In/Sign Up
         </button>
       </div>
-      <ul
-        class="py-2 text-sm text-gray-7000"
+      <div *ngIf="user != null && !user.isAnonymous">
+        @if(user.emailVerified){
+        <div class="flex px-4 py-2 text-gray-900">
+          Email:&nbsp; <span class="text-green-500">Verified</span
+          ><mat-icon
+            class="text-green-500 text-sm"
+            fontIcon="check_circle"
+          ></mat-icon>
+        </div>
+        } @if(!user.emailVerified){
+        <button
+          type="button"
+          (click)="$event.preventDefault(); sendVerificationEmail()"
+          class="flex px-4 py-2 text-gray-900 btn-ghost hover:bg-gray-200 w-full rounded items-start"
+        >
+          Email:&nbsp;<span class="text-red-500"> Not verified</span
+          ><mat-icon class="text-red-500 text-sm" fontIcon="warning"></mat-icon>
+        </button>
+        }
+      </div>
+
+      <!-- <ul
+        class="py-2 text-sm text-gray-700"
         aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton"
       >
         <li>
           <a
             href="#"
             class="block px-4 py-2 hover:bg-accent text-gray-900 hover:text-white"
-            >Dashboard</a
+            >TOS</a
           >
         </li>
         <li>
           <a
             href="#"
             class="block px-4 py-2 hover:bg-accent text-gray-900 hover:text-white"
-            >Settings</a
+            >Privacy Policy</a
           >
         </li>
-        <li>
-          <a
-            href="#"
-            class="block px-4 py-2 hover:bg-accent text-gray-900 hover:text-white"
-            >Earnings</a
-          >
-        </li>
-      </ul>
+      </ul> -->
       <div *ngIf="user != null && !user.isAnonymous" class="py-2 text-gray-900">
         <button
           (click)="signOut()"
@@ -99,6 +107,211 @@
         >
           Sign out
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- login pop up -->
+<div
+  *ngIf="signInClicked"
+  class="fixed top-0 w-full h-full z-[19999] bg-[rgba(0,0,0,.35)] flex items-center justify-center"
+>
+  <div class="h-[90%] relative max-h-[800px] w-[500px] bg-gray-50 rounded-xl">
+    <!-- close btn -->
+    <button
+      class="absolute top-5 right-5"
+      type="button"
+      (click)="$event.preventDefault(); quit()"
+    >
+      <mat-icon fontIcon="close"></mat-icon>
+    </button>
+
+    <!-- body -->
+    <div
+      class="w-full h-full overflow-scroll py-4 px-16 flex flex-col items-center"
+    >
+      <!-- logo -->
+      <img
+        class="object-cover w-44 my-16"
+        src="img/KostomApiLogoBlack-BW.png"
+        alt="KostomApi"
+      />
+
+      <!-- form -->
+      <form
+        class="w-full flex flex-col gap-3 [&>input]:h-16 items-center"
+        [formGroup]="inputControl"
+        (ngSubmit)="$event.preventDefault(); submit()"
+      >
+        <div *ngIf="accountLoginType == 1" class="relative z-0 w-full group">
+          <input
+            type="text"
+            name="floating_username"
+            id="floating_username"
+            class="block py-2.5 pt-6 rounded-md px-0 w-full text-sm text-gray-900 bg-transparent border-2 h-14 border-gray-300 transition-all appearance-none focus:pt-4.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent peer indent-4"
+            placeholder=" "
+            required
+            formControlName="senderNameControl"
+          />
+          <label
+            for="floating_username"
+            class="peer-focus:font-semibold absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-1 translate-x-4 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/4 peer-placeholder-shown:translate-x-5 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:translate-x-4"
+          >
+            Name*
+          </label>
+        </div>
+        <div
+          *ngIf="
+            accountLoginType == 0 ||
+            accountLoginType == 1 ||
+            accountLoginType == 2
+          "
+          class="relative z-0 w-full group"
+        >
+          <input
+            type="email"
+            name="floating_email"
+            id="floating_email"
+            class="block py-2.5 pt-6 rounded-md px-0 w-full text-sm text-gray-900 bg-transparent border-2 h-14 border-gray-300 transition-all appearance-none focus:pt-4.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent peer indent-4"
+            placeholder=" "
+            required
+            formControlName="senderEmailControl"
+          />
+          <label
+            for="floating_email"
+            class="peer-focus:font-semibold absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-1 translate-x-4 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/4 peer-placeholder-shown:translate-x-5 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:translate-x-4"
+            >Email*</label
+          >
+        </div>
+        <div
+          *ngIf="accountLoginType == 1 || accountLoginType == 0"
+          class="relative z-0 w-full group"
+        >
+          <input
+            type="password"
+            name="floating_password"
+            id="floating_password"
+            class="block py-2.5 pt-6 rounded-md px-0 w-full text-sm text-gray-900 bg-transparent border-2 h-14 border-gray-300 transition-all appearance-none focus:pt-4.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent peer indent-4"
+            placeholder=" "
+            required
+            formControlName="senderPasswordControl"
+          />
+          <label
+            for="floating_password"
+            class="peer-focus:font-semibold absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-1 translate-x-4 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/4 peer-placeholder-shown:translate-x-5 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:translate-x-4"
+            >Password*</label
+          >
+        </div>
+        <!-- forgot password -->
+        <button
+          *ngIf="accountLoginType == 0"
+          class="self-end h-6 text-sm hover:underline active:scale-95 transition-all"
+          type="button"
+          (click)="$event.preventDefault(); forgotPasswordClicked()"
+        >
+          Forgot password?
+        </button>
+        <!-- logn | signup | reset -->
+        <small *ngIf="errorMessage != null" class="text-red-400">
+          {{ errorMessage }}
+        </small>
+        <loading-animation
+          [showAnimation]="showLoadingAnimation"
+        ></loading-animation>
+        <button
+          [disabled]="!valid"
+          class="btn bg-black hover:opacity-80 hover:bg-black btn-wide text-white"
+          type="submit"
+        >
+          @if(accountLoginType == 1){ Sign up } @if(accountLoginType == 0){ Sign
+          in } @if(accountLoginType == 2){ Send instructions }
+        </button>
+        <!-- dont have an account -->
+        <button
+          *ngIf="accountLoginType == 0"
+          class="h-6 text-sm hover:underline active:scale-95 transition-all"
+          type="button"
+          (click)="$event.preventDefault(); dontHaveAccountClicked()"
+        >
+          Don't have an account?
+        </button>
+        <!-- had an account -->
+        <button
+          *ngIf="accountLoginType == 1"
+          class="h-6 text-sm hover:underline active:scale-95 transition-all"
+          type="button"
+          (click)="$event.preventDefault(); alreadyHaveAccountClicked()"
+        >
+          Already have an account?
+        </button>
+        <!-- login -->
+        <button
+          *ngIf="accountLoginType == 2"
+          class="-mt-2 btn btn-ghost btn-accent btn-wide"
+          type="button"
+          (click)="$event.preventDefault(); alreadyHaveAccountClicked()"
+        >
+          Login page
+        </button>
+      </form>
+
+      <!-- google social link -->
+
+      <div *ngIf="accountLoginType == 0 || accountLoginType == 1">
+        <div class="flex gap-2 w-full justify-center items-center my-5">
+          <div class="grow h-[.125rem] bg-gray-200"></div>
+          <div>or</div>
+          <div class="grow h-[.125rem] bg-gray-200"></div>
+        </div>
+
+        <div
+          class="w-full flex flex-col items-center gap-2 [&>button]:btn [&>button]:btn-wide [&>button]:btn-outline"
+        >
+          <!-- google -->
+          <button
+            type="button"
+            (click)="$event.preventDefault(); signInWithGoogle()"
+          >
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                width="24"
+                height="24"
+                viewBox="0 0 48 48"
+              >
+                <path
+                  fill="#FFC107"
+                  d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+                ></path>
+                <path
+                  fill="#FF3D00"
+                  d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+                ></path>
+                <path
+                  fill="#4CAF50"
+                  d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+                ></path>
+                <path
+                  fill="#1976D2"
+                  d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+                ></path>
+              </svg>
+            </span>
+            <span>Continue with Google</span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="h-full w-[70%] text-center min-h-20 flex text-[.75rem] flex-col justify-end"
+      >
+        <p class="[&>a]:text-accent">
+          By continuing, you agree to <a>Terms of Service</a> and have read our
+          <a>Privacy</a>
+          Policy.
+        </p>
       </div>
     </div>
   </div>
