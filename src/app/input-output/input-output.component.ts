@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InvalidInputEntries } from './InvalidInputEntries';
+import {
+  createInvalidInputLength,
+  InvalidInputEntries,
+} from './InvalidInputEntries';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../shared/auth.service';
 import { LoadingAnimationComponent } from '../loading-animation/loading-animation.component';
+import * as global from '../shared/globals';
 
 @Component({
   selector: 'input-output',
@@ -19,15 +23,16 @@ import { LoadingAnimationComponent } from '../loading-animation/loading-animatio
   templateUrl: './input-output.component.html',
   styleUrl: './input-output.component.css',
 })
-export class InputOutputComponent implements OnInit {
+export class InputOutputComponent {
   @Output() inputValue = new EventEmitter<any>();
   @Input() outputValue: string[] = [];
   @Input() title: string = '';
   @Input() showLoadingAnimation: boolean = false;
 
-  constructor(private clipboard: Clipboard, private auth: AuthService) {}
+  private auth = inject(AuthService);
+  private InvalidInputLength = createInvalidInputLength(this.auth);
 
-  ngOnInit(): void {}
+  constructor(private clipboard: Clipboard) {}
 
   get getEmailVerified(): boolean {
     if (
@@ -44,10 +49,37 @@ export class InputOutputComponent implements OnInit {
     return this._verificationMessage;
   }
 
+  get invalidLengthErrrorMessage(): string | undefined {
+    return this.auth.currentUser() == undefined ||
+      this.auth.currentUser() == null ||
+      this.auth.currentUser()?.isAnonymous
+      ? 'Create an account for more quota'
+      : undefined;
+  }
+
   inputControl = new FormControl('', [
     Validators.required,
     InvalidInputEntries,
+    this.InvalidInputLength,
   ]);
+
+  get currentCount(): string {
+    return `${this.inputControl.value?.length}`;
+  }
+
+  get maxCount(): string {
+    return this.auth.currentUser() == undefined ||
+      this.auth.currentUser() == null ||
+      this.auth.currentUser()?.isAnonymous
+      ? `${global.free}`
+      : '∞';
+  }
+
+  get currentCountStyle(): string {
+    return this.inputControl.hasError('InvalidinputLength')
+      ? 'text-red-500 font-bold'
+      : '';
+  }
 
   submitForm() {
     if (this.inputControl.dirty) {

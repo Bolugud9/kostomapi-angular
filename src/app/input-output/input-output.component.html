@@ -26,9 +26,13 @@
             <small *ngIf="inputControl?.hasError('InvalidInputEntries')">
               This field required a text value.
             </small>
+
+            <small *ngIf="inputControl?.hasError('InvalidinputLength')">
+              {{ invalidLengthErrrorMessage }}
+            </small>
           </div>
           <loading-animation
-            class="absolute bottom-0"
+            class="absolute bottom-[50%] right-[50%]"
             [showAnimation]="showLoadingAnimation"
           ></loading-animation>
 
@@ -39,7 +43,11 @@
           >
             {{ verificationMessage }}
           </button>
-          <div class="flex flex-col items-end pt-3">
+          <div class="flex flex-row items-center justify-between pt-3">
+            <div class="text-sm">
+              <span class="{{ currentCountStyle }}">{{ currentCount }}</span
+              ><span class="font-black">/{{ maxCount }}</span>
+            </div>
             <button
               [disabled]="inputControl.invalid || !getEmailVerified"
               class="btn"
