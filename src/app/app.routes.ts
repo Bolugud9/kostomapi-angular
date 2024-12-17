@@ -15,5 +15,6 @@ export const routes: Routes = [
   {
     path: '**',
     component: NotFoundComponent,
+    title: '404NotFound - KostomApi',
   },
 ];
