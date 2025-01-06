@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  model,
+  Output,
+  signal,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../shared/auth.service';
@@ -33,15 +41,16 @@ enum AccountLoginType {
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  @Input() set toggleSigninClicked(bool: boolean) {
-    this.signInClicked = bool;
-  }
+  // @Input() set toggleSigninClicked(bool: boolean) {
+  //   this.signInClicked = bool;
+  // }
 
-  @Output() signInClosed = new EventEmitter<any>();
+  signInClicked = model(false);
 
-  private _accountLoginType: AccountLoginType = AccountLoginType.LOGIN;
+  // @Output() signInClicked.update((value)=>!value) = new EventEmitter<any>();
+
   showLoadingAnimation: boolean = false;
-  signInClicked: boolean = false;
+  // signInClicked: boolean = false;
 
   constructor(
     private router: Router,
@@ -49,9 +58,7 @@ export class HeaderComponent {
     private toastr: ToastrService
   ) {}
 
-  get accountLoginType(): AccountLoginType {
-    return this._accountLoginType;
-  }
+  accountLoginType = signal<AccountLoginType>(AccountLoginType.LOGIN);
 
   get user() {
     return this.auth.currentUser();
@@ -59,20 +66,20 @@ export class HeaderComponent {
 
   get valid(): boolean {
     if (
-      this._accountLoginType == 0 &&
+      this.accountLoginType() === 0 &&
       this.inputControl.get('senderEmailControl')?.valid &&
       this.inputControl.get('senderPasswordControl')?.valid
     ) {
       return true;
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderNameControl')?.valid &&
       this.inputControl.get('senderEmailControl')?.valid &&
       this.inputControl.get('senderPasswordControl')?.valid
     ) {
       return true;
     } else if (
-      this._accountLoginType == 2 &&
+      this.accountLoginType() === 2 &&
       this.inputControl.get('senderEmailControl')?.valid
     ) {
       return true;
@@ -82,20 +89,20 @@ export class HeaderComponent {
 
   get dirty(): boolean {
     if (
-      this._accountLoginType == 0 &&
+      this.accountLoginType() === 0 &&
       this.inputControl.get('senderEmailControl')?.dirty &&
       this.inputControl.get('senderPasswordControl')?.dirty
     ) {
       return true;
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderNameControl')?.dirty &&
       this.inputControl.get('senderEmailControl')?.dirty &&
       this.inputControl.get('senderPasswordControl')?.dirty
     ) {
       return true;
     } else if (
-      this._accountLoginType == 2 &&
+      this.accountLoginType() === 2 &&
       this.inputControl.get('senderEmailControl')?.dirty
     ) {
       return true;
@@ -105,72 +112,72 @@ export class HeaderComponent {
 
   get errorMessage(): string | null {
     if (
-      this._accountLoginType == 0 &&
+      this.accountLoginType() === 0 &&
       this.inputControl.get('senderEmailControl')?.hasError('required') &&
       this.inputControl.get('senderEmailControl')?.touched
     ) {
       return 'email field is required';
     } else if (
-      this._accountLoginType == 0 &&
+      this.accountLoginType() === 0 &&
       this.inputControl.get('senderEmailControl')?.hasError('email') &&
       this.inputControl.get('senderEmailControl')?.dirty &&
       this.inputControl.get('senderEmailControl')?.touched
     ) {
       return 'Please enter your email address';
     } else if (
-      this._accountLoginType == 0 &&
+      this.accountLoginType() === 0 &&
       this.inputControl.get('senderPasswordControl')?.hasError('required') &&
       this.inputControl.get('senderPasswordControl')?.touched
     ) {
       return 'Password is required';
     } else if (
-      this._accountLoginType == 0 &&
+      this.accountLoginType() === 0 &&
       this.inputControl.get('senderPasswordControl')?.hasError('minLength') &&
       this.inputControl.get('senderPasswordControl')?.dirty &&
       this.inputControl.get('senderPasswordControl')?.touched
     ) {
       return 'Password must be at least 6 characters';
     } else if (
-      this._accountLoginType == 2 &&
+      this.accountLoginType() === 2 &&
       this.inputControl.get('senderEmailControl')?.hasError('email') &&
       this.inputControl.get('senderEmailControl')?.dirty &&
       this.inputControl.get('senderEmailControl')?.touched
     ) {
       return 'Please enter your email address';
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderNameControl')?.hasError('required') &&
       this.inputControl.get('senderNameControl')?.touched
     ) {
       return 'Name is required';
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderNameControl')?.hasError('minLength') &&
       this.inputControl.get('senderNameControl')?.dirty &&
       this.inputControl.get('senderNameControl')?.touched
     ) {
       return 'Name must be at least 5 characters';
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderEmailControl')?.hasError('required') &&
       this.inputControl.get('senderEmailControl')?.touched
     ) {
       return 'email field is required';
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderEmailControl')?.hasError('email') &&
       this.inputControl.get('senderEmailControl')?.dirty &&
       this.inputControl.get('senderEmailControl')?.touched
     ) {
       return 'Please enter your email address';
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderPasswordControl')?.hasError('required') &&
       this.inputControl.get('senderPasswordControl')?.touched
     ) {
       return 'Password is required';
     } else if (
-      this._accountLoginType == 1 &&
+      this.accountLoginType() === 1 &&
       this.inputControl.get('senderPasswordControl')?.hasError('minLength') &&
       this.inputControl.get('senderPasswordControl')?.dirty &&
       this.inputControl.get('senderPasswordControl')?.touched
@@ -204,27 +211,25 @@ export class HeaderComponent {
   }
 
   signIn() {
-    this.signInClicked = !this.signInClicked;
-    this.signInClosed.emit(false);
+    this.signInClicked.update((value) => !value);
   }
 
   signInWithGoogle() {
     this.auth.signInWithGoogle().subscribe(() => {
-      this.signInClicked = !this.signInClicked;
-      this.signInClosed.emit(false);
+      this.signInClicked.update((value) => !value);
     });
   }
 
   forgotPasswordClicked() {
-    this._accountLoginType = AccountLoginType.FORGOT_PASSWORD;
+    this.accountLoginType.update(() => AccountLoginType.FORGOT_PASSWORD);
   }
 
   dontHaveAccountClicked() {
-    this._accountLoginType = AccountLoginType.SIGN_UP;
+    this.accountLoginType.update(() => AccountLoginType.SIGN_UP);
   }
 
   alreadyHaveAccountClicked() {
-    this._accountLoginType = AccountLoginType.LOGIN;
+    this.accountLoginType.update(() => AccountLoginType.LOGIN);
   }
 
   sendVerificationEmail() {
@@ -236,7 +241,7 @@ export class HeaderComponent {
   submit() {
     if (!this.valid) return;
     this.showLoadingAnimation = true;
-    switch (this.accountLoginType) {
+    switch (this.accountLoginType()) {
       case AccountLoginType.LOGIN:
         this.auth
           .login(
@@ -290,9 +295,9 @@ export class HeaderComponent {
   }
 
   quit() {
-    this.signInClosed.emit(false);
-    this.signInClicked = false;
-    this._accountLoginType = AccountLoginType.LOGIN;
+    this.signInClicked.update((value) => !value);
+    // this.signInClicked = false;
+    this.accountLoginType.update(() => AccountLoginType.LOGIN);
     this.toastr.clear();
   }
 

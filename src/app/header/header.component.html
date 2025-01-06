@@ -114,7 +114,7 @@
 
 <!-- login pop up -->
 <div
-  *ngIf="signInClicked"
+  *ngIf="signInClicked()"
   class="fixed top-0 w-full h-full z-[19999] bg-[rgba(0,0,0,.35)] flex items-center justify-center"
 >
   <div class="h-[90%] relative max-h-[800px] w-[500px] bg-gray-50 rounded-xl">
@@ -144,7 +144,7 @@
         [formGroup]="inputControl"
         (ngSubmit)="$event.preventDefault(); submit()"
       >
-        <div *ngIf="accountLoginType == 1" class="relative z-0 w-full group">
+        <div *ngIf="accountLoginType() === 1" class="relative z-0 w-full group">
           <input
             type="text"
             name="floating_username"
@@ -163,9 +163,9 @@
         </div>
         <div
           *ngIf="
-            accountLoginType == 0 ||
-            accountLoginType == 1 ||
-            accountLoginType == 2
+            accountLoginType() === 0 ||
+            accountLoginType() === 1 ||
+            accountLoginType() === 2
           "
           class="relative z-0 w-full group"
         >
@@ -185,7 +185,7 @@
           >
         </div>
         <div
-          *ngIf="accountLoginType == 1 || accountLoginType == 0"
+          *ngIf="accountLoginType() === 1 || accountLoginType() === 0"
           class="relative z-0 w-full group"
         >
           <input
@@ -205,7 +205,7 @@
         </div>
         <!-- forgot password -->
         <button
-          *ngIf="accountLoginType == 0"
+          *ngIf="accountLoginType() === 0"
           class="self-end h-6 text-sm hover:underline active:scale-95 transition-all"
           type="button"
           (click)="$event.preventDefault(); forgotPasswordClicked()"
@@ -224,12 +224,12 @@
           class="btn bg-black hover:opacity-80 hover:bg-black btn-wide text-white"
           type="submit"
         >
-          @if(accountLoginType == 1){ Sign up } @if(accountLoginType == 0){ Sign
-          in } @if(accountLoginType == 2){ Send instructions }
+          @if(accountLoginType() === 1){ Sign up } @if(accountLoginType() ===
+          0){ Sign in } @if(accountLoginType() === 2){ Send instructions }
         </button>
         <!-- dont have an account -->
         <button
-          *ngIf="accountLoginType == 0"
+          *ngIf="accountLoginType() === 0"
           class="h-6 text-sm hover:underline active:scale-95 transition-all"
           type="button"
           (click)="$event.preventDefault(); dontHaveAccountClicked()"
@@ -238,7 +238,7 @@
         </button>
         <!-- had an account -->
         <button
-          *ngIf="accountLoginType == 1"
+          *ngIf="accountLoginType() === 1"
           class="h-6 text-sm hover:underline active:scale-95 transition-all"
           type="button"
           (click)="$event.preventDefault(); alreadyHaveAccountClicked()"
@@ -247,7 +247,7 @@
         </button>
         <!-- login -->
         <button
-          *ngIf="accountLoginType == 2"
+          *ngIf="accountLoginType() === 2"
           class="-mt-2 btn btn-ghost btn-accent btn-wide"
           type="button"
           (click)="$event.preventDefault(); alreadyHaveAccountClicked()"
@@ -258,7 +258,7 @@
 
       <!-- google social link -->
 
-      <div *ngIf="accountLoginType == 0 || accountLoginType == 1">
+      <div *ngIf="accountLoginType() === 0 || accountLoginType() === 1">
         <div class="flex gap-2 w-full justify-center items-center my-5">
           <div class="grow h-[.125rem] bg-gray-200"></div>
           <div>or</div>

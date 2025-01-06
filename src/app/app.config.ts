@@ -29,9 +29,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideAnimations(),
     provideToastr({
-      positionClass: 'toast-bottom-right',
+      positionClass: 'toast-top-right',
       titleClass: 'text-xl font-bold',
       messageClass: 'text-sm font-medium',
+      tapToDismiss: true,
       timeOut: 2500,
       iconClasses: {
         error: 'bg-red-700',

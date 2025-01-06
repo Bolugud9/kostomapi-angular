@@ -1,7 +1,4 @@
-<app-header
-  [toggleSigninClicked]="showSignInPopup"
-  (signInClosed)="showSignInPopup = $event"
-></app-header>
+<app-header [(signInClicked)]="showSignIn"></app-header>
 
 <input-output
   (inputValue)="ParseMQL4($event)"

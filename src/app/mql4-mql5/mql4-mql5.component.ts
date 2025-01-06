@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { InputOutputComponent } from '../input-output/input-output.component';
 import { Meta, Title } from '@angular/platform-browser';
 import { AuthService } from '../shared/auth.service';
@@ -16,6 +16,7 @@ export class Mql4Mql5Component implements OnInit {
   _outputValue: string[] = [];
   showLoadingAnimation: boolean = false;
   showSignInPopup: boolean = false;
+  showSignIn = signal(false);
 
   get outputValue(): string[] {
     return this._outputValue;
